@@ -1,6 +1,6 @@
 // @flow
 
-import loader from '../src';
+// import loader from '../src';
 import { generateFileName } from '../src/loader';
 /*
 describe('base request test', () => {
@@ -10,11 +10,11 @@ describe('base request test', () => {
 });
 */
 describe('Test files name generator', () => {
-  it ('Basic test', () => {
+  it('Basic test', () => {
     expect(generateFileName('https://ru.hexlet.io/courses/js-sync'))
       .toBe('ru-hexlet-io-courses-js-sync.html');
   });
-  it ('Basic test 2', () => {
+  it('Basic test 2', () => {
     expect(generateFileName('https://google.com'))
       .toBe('google-com.html');
   });
