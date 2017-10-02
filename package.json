@@ -28,7 +28,8 @@
     "lodash": "*",
     "listr": "*",
     "axios": "*",
-    "commander": "*"
+    "commander": "*",
+    "mz": "*"
  },
   "devDependencies": {
     "babel-cli": "*",

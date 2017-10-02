@@ -12,7 +12,8 @@ cli
   .version(version)
   .arguments('<url>')
   .description('Download data from url')
-  .option('-o, --output', 'Path for saving data')
   .action(url =>
-    console.log(loader(url)))
+    console.log(loader(url, cli.output)))
+  .option('-o, --output [path]', 'Path for saving data')
   .parse(process.argv);
+console.log(process.argv);
