@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-
+// @flow
 import cli from 'commander';
 import fs from 'fs';
-import half from '../';
+import loader from '../';
 
 const config = fs.readFileSync('./package.json', 'utf8');
 const { version } = JSON.parse(config);
@@ -13,7 +13,6 @@ cli
   .arguments('<url>')
   .description('Download data from url')
   .option('-o, --output', 'Path for saving data')
-  .parse(process.argv)
   .action(url =>
-    console.log(half(url)));
-
+    console.log(loader(url)))
+  .parse(process.argv);

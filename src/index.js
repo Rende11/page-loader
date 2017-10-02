@@ -1,5 +1,5 @@
 // @flow
 
-import half from './half';
+import loader from './loader';
 
-export default half;
+export default loader;

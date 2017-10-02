@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 export default function (url: string) {
-  axios.get(url)
-    .then(response => console.log(response.status))
+  return axios.get(url)
+    .then(response => response.status)
     .catch(error => console.log(error));
 }

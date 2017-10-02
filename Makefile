@@ -2,7 +2,7 @@ install:
 	npm install
 
 run:
-	npm run babel-node -- 'src/bin/index.js' ${OPTION} ${URL}
+	npm run babel-node -- 'src/bin/index.js' https://google.com
 
 install-flow-typed:
 	npm run flow-typed install
