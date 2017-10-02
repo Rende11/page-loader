@@ -1,9 +1,9 @@
 {
-  "name": "page-loader",
-  "version": "0.0.1",
-  "description": "",
+  "name": "async-page-loader",
+  "version": "0.0.3",
+  "description": "async-page-loader",
   "bin": {
-    "loader": "dist/bin/index.js"
+    "page-loader": "dist/bin/index.js"
   },
   "scripts": {
     "test": "jest",
