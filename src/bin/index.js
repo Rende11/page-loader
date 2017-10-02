@@ -2,12 +2,11 @@
 
 // @flow
 import cli from 'commander';
-import fs from 'fs';
 import loader from '../';
 
 
 cli
-  .version('0.0.3')
+  .version('0.0.5')
   .arguments('<url>')
   .description('Download data from url')
   .action(url =>
