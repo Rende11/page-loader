@@ -1,5 +1,6 @@
 language: node_js
 node_js:
   - stable
-
+env:
+  CODECLIMATE_REPO_TOKEN: 81dc775b2e5fda40afdbbaa9e8c91d4df900126adb0d152203204d1249fe8f6a
 script: make lint test
