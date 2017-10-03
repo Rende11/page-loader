@@ -11,7 +11,7 @@ export const generateFileName = (url: string) => {
   return withExtension;
 };
 
-const makeDir = (path, data) =>
+const makeDir = (path: string, data: string) =>
   mz.exists(path)
     .then((isExists) => {
       if (!isExists) {
@@ -23,7 +23,7 @@ const makeDir = (path, data) =>
 
 export const loader = (url: string, path: string = './') => {
   const filePath = `${path}${generateFileName(url)}`;
-  axios.get(url)
+  return axios.get(url)
     .then(response => response.data)
     .then(data => makeDir(path, data))
     .then(data => mz.writeFile(filePath, data, 'utf8'))
