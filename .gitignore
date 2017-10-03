@@ -4,4 +4,4 @@ dist
 flow-typed
 .tern-port
 jest*
-*.html
+/*.html

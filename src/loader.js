@@ -23,7 +23,7 @@ const makeDir = (path: string, data: string) =>
 
 export const loader = (url: string, path: string = './') => {
   const filePath = `${path}${generateFileName(url)}`;
-  return axios.get(url)
+  return  axios.get(url)
     .then(response => response.data)
     .then(data => makeDir(path, data))
     .then(data => mz.writeFile(filePath, data, 'utf8'))
