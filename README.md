@@ -6,3 +6,18 @@
 ```
 make install
 ```
+#### Install from npm
+
+```
+npm install async-page-loader
+```
+
+#### Run
+
+```
+async-page-loader --output [path to save] url
+```
+
+#### Current workflow
+
+  [asciinema](https://asciinema.org/a/WPkYiO24uHFlcoRCHbzclNYBO)
