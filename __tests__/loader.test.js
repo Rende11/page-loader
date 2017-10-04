@@ -19,12 +19,12 @@ const status = 200;
 axios.defaults.host = host;
 axios.defaults.adapter = httpAdapter;
 const fileName = generateFileName(host);
-
+nock.disableNetConnect();
 describe('Base request test', () => {
   it('Hexlet should work', (done) => {
     nock(host).get('/').reply(status, body);
     const route = `${tempDir}/${fileName}`;
-    loader(host, `${tempDir}/`)
+    loader(host, tempDir)
       .then(() => fs.readFile(route, 'utf8'))
       .then((content) => {
         expect(content).toBe(body);
