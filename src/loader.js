@@ -3,6 +3,7 @@
 import axios from 'axios';
 import { URL } from 'url';
 import mz from 'mz/fs';
+import path from 'path';
 
 export const generateFileName = (url: string) => {
   const { hostname, pathname } = new URL(url);
@@ -11,7 +12,7 @@ export const generateFileName = (url: string) => {
   return withExtension;
 };
 
-const makeDir = (path: string, data: string) =>
+/* const makeDir = (path: string, data: string) =>
   mz.exists(path)
     .then((isExists) => {
       if (!isExists) {
@@ -20,12 +21,11 @@ const makeDir = (path: string, data: string) =>
       }
       return data;
     });
-
-export const loader = (url: string, path: string = './') => {
-  const filePath = `${path}${generateFileName(url)}`;
+    */
+export const loader = (url: string, route: string = './') => {
+  const filePath = path.resolve(`${route}/${generateFileName(url)}`);
   return axios.get(url)
     .then(response => response.data)
-    .then(data => makeDir(path, data))
     .then(data => mz.writeFile(filePath, data, 'utf8'))
     .catch(error => console.log(error));
 };

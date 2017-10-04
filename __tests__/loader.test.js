@@ -12,26 +12,47 @@ import loader from '../src';
 import { generateFileName } from '../src/loader';
 
 
-const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'x-'));
-const body = fs.readFileSync('./__tests__/__fixtures__/hexlet-io.html', 'utf8');
-const host = 'https://hexlet.io';
-const status = 200;
-axios.defaults.host = host;
-axios.defaults.adapter = httpAdapter;
-const fileName = generateFileName(host);
-
+nock.disableNetConnect();
 describe('Base request test', () => {
   it('Hexlet should work', (done) => {
+    const host = 'https://hexlet.io';
+    const status = 200;
+    axios.defaults.host = host;
+    axios.defaults.adapter = httpAdapter;
+    const fileName = generateFileName(host);
+    const body = fs.readFileSync('./__tests__/__fixtures__/hexlet-io.html', 'utf8');
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'x-'));
+
     nock(host).get('/').reply(status, body);
     const route = `${tempDir}/${fileName}`;
-    loader(host, `${tempDir}/`)
+
+    loader(host, tempDir)
       .then(() => fs.readFile(route, 'utf8'))
       .then((content) => {
         expect(content).toBe(body);
         done();
-      })
-      .catch(done.fail);
+      }).catch(done.fail);
   });
+});
+
+test('Another test', () => {
+  expect.assertions(1);
+  const host = 'https://hexlet.io';
+  const status = 200;
+  axios.defaults.host = host;
+  axios.defaults.adapter = httpAdapter;
+  const fileName = generateFileName(host);
+  const body = fs.readFileSync('./__tests__/__fixtures__/hexlet-io.html', 'utf8');
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'x-'));
+
+  nock(host).get('/').reply(status, body);
+  const route = `${tempDir}/${fileName}`;
+
+
+  return loader(host, tempDir).then(() => fs.readFile(route, 'utf8'))
+    .then((content) => {
+      expect(content).toBe(body);
+    });
 });
 
 describe('Test files name generator', () => {
