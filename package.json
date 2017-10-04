@@ -29,7 +29,8 @@
     "listr": "*",
     "axios": "*",
     "commander": "*",
-    "mz": "*"
+    "mz": "*",
+    "cheerio": "*"
  },
   "devDependencies": {
     "babel-cli": "*",
