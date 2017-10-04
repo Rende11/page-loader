@@ -12,7 +12,7 @@ export const generateFileName = (url: string) => {
   return withExtension;
 };
 
-/*const makeDir = (path: string, data: string) =>
+/* const makeDir = (path: string, data: string) =>
   mz.exists(path)
     .then((isExists) => {
       if (!isExists) {
