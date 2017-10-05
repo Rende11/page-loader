@@ -4,6 +4,7 @@ import axios from 'axios';
 import { URL } from 'url';
 import mz from 'mz/fs';
 import path from 'path';
+// import { replaceTagsPath } from './resourseLoader';
 
 export const generateFileName = (url: string) => {
   const { hostname, pathname } = new URL(url);
@@ -12,21 +13,16 @@ export const generateFileName = (url: string) => {
   return withExtension;
 };
 
-/* const makeDir = (path: string, data: string) =>
-  mz.exists(path)
-    .then((isExists) => {
-      if (!isExists) {
-        mz.mkdir(path)
-          .catch(err => console.log(err));
-      }
-      return data;
-    });
-    */
+export const generatePath = (route: string) => {
+  const { dir, base } = path.parse(route);
+  return `${dir.replace(/\W/gi, '-')}${base}`;
+};
+
 export const loader = (url: string, route: string = './') => {
   const filePath = path.resolve(`${route}/${generateFileName(url)}`);
   return axios.get(url)
     .then(response => response.data)
-    .then(data => mz.writeFile(filePath, data, 'utf8'))
-    .catch(error => console.log(error));
+  // .then(data => replaceTagsPath(data))
+    .then(data => mz.writeFile(filePath, data, 'utf8'));
 };
 
