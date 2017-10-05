@@ -3,7 +3,7 @@
 import cheerio from 'cheerio';
 // import fs from 'mz/fs';
 import path from 'path';
-import { generatePath } from './loader';
+import { generatePath } from './nameGenerator';
 
 export const replaceTagsPath = (html: string) => {
   const $ = cheerio.load(html);
@@ -16,3 +16,10 @@ export const replaceTagsPath = (html: string) => {
   return $.html();
 };
 
+
+const tags = ['link', 'script', 'img'];
+
+export const getResoursesHrefs = (html: string, host: string) => {
+  const $ = cheerio.load(html);
+  const links = $('link');
+};
