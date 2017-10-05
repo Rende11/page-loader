@@ -1,5 +1,6 @@
 // @flow
-
+import path from 'path';
+import { URL } from 'url';
 
 /* export const generateFileName = (url: string) => {
   const { hostname, pathname } = new URL(url);
@@ -22,6 +23,12 @@ const generateName = (base, extension) => {
 
 
 export const generateFileName = (url: string) => {
+  const { hostname, pathname } = new URL(url);
+  return generateName(`${hostname}${pathname}`, '.html');
+};
+
+
+export const generateDirName = (url: string) => {
   const { hostname, pathname } = new URL(url);
   return generateName(`${hostname}${pathname}`, '.html');
 };

@@ -11,17 +11,14 @@ export const loader = (url: string, route: string = './') => {
   const filePath = path.resolve(`${route}/${generateFileName(url)}`);
   return axios.get(url)
     .then(response => response.data)
-    .then(data => createResoureDir())
-    .then(data => downloadResourse())
- // .then(data => replaceTagsPath(data))
     .then(data => mz.writeFile(filePath, data, 'utf8'));
 };
 
-
+/*
 export const fileLoader = (url: string, route: string = './') => {
   const filePath = path.resolve(`${route}/${generateFileName(url)}`);
   return axios.get(url)
     .then(response => response.data)
     .then(data => mz.writeFile(filePath, data, 'utf8'));
 };
-
+*/
