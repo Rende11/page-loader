@@ -1,5 +1,6 @@
 // @flow
 
+import _ from 'lodash';
 import cheerio from 'cheerio';
 // import fs from 'mz/fs';
 import path from 'path';
@@ -19,7 +20,26 @@ export const replaceTagsPath = (html: string) => {
 
 const tags = ['link', 'script', 'img'];
 
-export const getResoursesHrefs = (html: string, host: string) => {
+export const getResoursesHrefs = (html: string) => {
   const $ = cheerio.load(html);
   const links = $('link');
+  const scripts = $('script');
+  const imgs = $('img');
+
+  return _.flatten(tags.map(tag => [...$(tag)]
+    .map(link => $(link).attr(mapedLinks[tag])))).filter(x => !!x);
 };
+
+export const fullPathedLinks = (links: array, hostname: string) =>
+  links.map(link => `https://${path.join(hostname, link)}`);
+
+export const getLinks = (html: string, host: string) => {
+  const refs = getResoursesHrefs(html);
+  return fullPathedLinks(refs, host);
+};
+
+const mapedLinks = {
+  'link': 'href',
+  'img': 'src',
+  'script': 'src'
+}

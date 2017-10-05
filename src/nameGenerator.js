@@ -15,7 +15,7 @@ export const generatePath = (route: string) => {
 };
 
 
-const generateName = (base, extension) => {
+export const generateName = (base, extension) => {
   const replaced = `${base}`.replace(/\W/gi, '-').replace(/-$/gi, '');
   const withExtension = `${replaced}${extension}`;
   return withExtension;
