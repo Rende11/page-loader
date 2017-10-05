@@ -9,7 +9,7 @@ import httpAdapter from 'axios/lib/adapters/http';
 
 
 import loader from '../src';
-import { generateFileName } from '../src/loader';
+import { generateFileName } from '../src/nameGenerator';
 
 
 nock.disableNetConnect();
@@ -17,7 +17,6 @@ describe('Base request test', () => {
   it('Hexlet should work', (done) => {
     const host = 'https://hexlet.io';
     const status = 200;
-    axios.defaults.host = host;
     axios.defaults.adapter = httpAdapter;
     const fileName = generateFileName(host);
     const body = fs.readFileSync('./__tests__/__fixtures__/hexlet-io.html', 'utf8');
