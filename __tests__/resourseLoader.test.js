@@ -1,6 +1,7 @@
 // @flow
 
 import { replaceTagsPath, getResoursesHrefs, fullPathedLinks } from '../src/resourseLoader';
+import { generateResName } from '../src/nameGenerator';
 import fs from 'mz/fs';
 
 test('Check replace hrefs', () => {
@@ -20,4 +21,9 @@ describe('Test files name generator', () => {
     console.log(fullPathedLinks(hrefs, 'hexlet.io'));
     expect([]).toBe(['a', 'b']);
   });
+  it('Test Res name', () => {
+    const x = generateResName('https://hexlet.io/assets/application.js');
+
+    expect(x).toBe(['a', 'c']);
+  })
 });

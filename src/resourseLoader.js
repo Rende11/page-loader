@@ -27,15 +27,17 @@ export const getResoursesHrefs = (html: string) => {
   const imgs = $('img');
 
   return _.flatten(tags.map(tag => [...$(tag)]
-    .map(link => $(link).attr(mapedLinks[tag])))).filter(x => !!x);
+    .map(link => $(link).attr(mapedLinks[tag])))).filter(x => !!x) ;
 };
 
 export const fullPathedLinks = (links: array, hostname: string) =>
-  links.map(link => `https://${path.join(hostname, link)}`);
+  links.map(link => link.startsWith('http') ? link : `https://${path.join(hostname, link)}`);
 
 export const getLinks = (html: string, host: string) => {
   const refs = getResoursesHrefs(html);
-  return fullPathedLinks(refs, host);
+  const links = fullPathedLinks(refs, host);
+  console.log(links);
+  return links;
 };
 
 const mapedLinks = {
