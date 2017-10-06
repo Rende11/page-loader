@@ -36,7 +36,6 @@ export const generateDirName = (url: string) => {
 
 export const generateResName = (url: string) => {
   const { pathname } = new URL(url);
-  console.log (pathname);
   const { dir, base, ext, name } = pathNode.parse(pathname);
   const fullName = `${dir}/${name}`;
   return generateName(fullName, ext);

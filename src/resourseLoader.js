@@ -36,7 +36,7 @@ export const fullPathedLinks = (links: array, hostname: string) =>
 export const getLinks = (html: string, host: string) => {
   const refs = getResoursesHrefs(html);
   const links = fullPathedLinks(refs, host);
-  console.log(links);
+  // console.log(links);
   return links;
 };
 

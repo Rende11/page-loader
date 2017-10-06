@@ -5,7 +5,7 @@ import { URL } from 'url';
 import mz from 'mz/fs';
 import path from 'path';
 import { getLinks } from './resourseLoader';
-import { generateName, generateFileName, generateDirName } from './nameGenerator';
+import { generateName, generateFileName, generateDirName, generateResName } from './nameGenerator';
 
 export const loader5 = (url: string, route: string = './') => {
   const filePath = path.resolve(`${route}/${generateName(url, '')}`);
@@ -32,13 +32,27 @@ const loadHtml = (url: string, route: string = './') => {
 
 
 const loadRes = (url: string, route: string = './') => {
-
-
+  const name = generateResName(url);
+  const full = path.join(route, name);
+  const options = {
+      method:'get',
+      url,
+      responseType:'stream'
+  }
+  console.log(url);
+  return axios(options).then(content => content.data.pipe(mz.createWriteStream(full)));
 }
 export const loader = (url: string, route: string = './') => {
+  const dirName = path.join(route, generateDirName(url));
+  const filePath = path.resolve(`${route}/${generateFileName(url)}`)
   return loadHtml(url, route)
-    .then(() => mz.mkdir(path.join(route, generateDirName(url))))
-
+    .then(() => mz.mkdir(dirName))
+    .then(() => mz.readFile(filePath))
+    .then(content => {
+      const { host } = new URL(url);
+      const links = getLinks(content, host);
+      return Promise.all(links.map(link => loadRes(link, dirName)));
+    });
 };
 
 
