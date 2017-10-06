@@ -9,7 +9,7 @@ import httpAdapter from 'axios/lib/adapters/http';
 
 
 import loader from '../src';
-import { generateFileName } from '../src/nameGenerator';
+import { generateHtmlName } from '../src/nameGenerator';
 
 
 nock.disableNetConnect();
@@ -18,7 +18,7 @@ describe('Save file', () => {
     expect.assertions(1);
     const host = 'https://hexlet.io';
     axios.defaults.adapter = httpAdapter;
-    const fileName = generateFileName(host);
+    const fileName = generateHtmlName(host);
     const status = 200;
     const body = fs.readFileSync('./__tests__/__fixtures__/hexlet-io.html', 'utf8');
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'x-'));
@@ -30,13 +30,4 @@ describe('Save file', () => {
   });
 });
 
-describe('Test files name generator', () => {
-  it('Basic test', () => {
-    expect(generateFileName('https://ru.hexlet.io/courses/js-sync'))
-      .toBe('ru-hexlet-io-courses-js-sync.html');
-  });
-  it('Basic test 2', () => {
-    expect(generateFileName('https://google.com'))
-      .toBe('google-com.html');
-  });
-});
+

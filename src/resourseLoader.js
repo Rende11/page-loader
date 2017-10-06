@@ -4,17 +4,16 @@ import _ from 'lodash';
 import cheerio from 'cheerio';
 // import fs from 'mz/fs';
 import path from 'path';
-import { generatePath, generateResName2 } from './nameGenerator';
+import { generatePath, generateResName2, convertLink } from './nameGenerator';
 
 export const replaceTagsPath = (html: string, dir) => {
-  console.log(dir);
   const $ = cheerio.load(html);
   const links = $('link');
-  links.attr('href', (i, value) => value && path.normalize(generateResName2(value)));
+  links.attr('href', (i, value) => value && path.join(dir, convertLink(value)));
   const scripts = $('script');
-  scripts.attr('src', (i, value) => value && path.normalize(generateResName2(value)));
+  scripts.attr('src', (i, value) => value && path.join(dir, convertLink(value)));
   const imgs = $('img');
-  imgs.attr('src', (i, value) => value && path.normalize(generateResName2(value)));
+  imgs.attr('src', (i, value) => value && path.join(dir, convertLink(value)));
   return $.html();
 };
 
@@ -37,6 +36,7 @@ export const fullPathedLinks = (links: array, hostname: string) =>
 export const getLinks = (html: string, host: string) => {
   const refs = getResoursesHrefs(html);
   const links = fullPathedLinks(refs, host);
+  console.log(refs);
   return links;
 };
 

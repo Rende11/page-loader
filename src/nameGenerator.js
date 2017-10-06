@@ -14,7 +14,7 @@ export const generateName = (base: string, extension: string) => {
   return withExtension;
 };
 
-const replaceSlashes = (str: string) => srt.replace(/W/gi, '-').replace(/-$/gi, '').replace(/^-/gi, '');
+const replaceSlashes = (str: string) => str.replace(/\W/gi, '-').replace(/-$/gi, '').replace(/^-/gi, '');
 
 
 export const generateHtmlName = (url: string) => {
@@ -40,4 +40,10 @@ export const generateResName2 = (route: string) => {
   const { dir, base, ext, name } = pathNode.parse(route);
   const d = generatePath(dir);
   return `${d}-${base}`;
+}
+
+export const convertLink = (link) => {
+  const { dir, base } = pathNode.parse(link);
+  const replaced = replaceSlashes(dir);
+  return `${replaced}-${base}`;
 }
