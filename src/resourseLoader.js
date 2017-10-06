@@ -4,16 +4,17 @@ import _ from 'lodash';
 import cheerio from 'cheerio';
 // import fs from 'mz/fs';
 import path from 'path';
-import { generatePath, generateResName } from './nameGenerator';
+import { generatePath, generateResName2 } from './nameGenerator';
 
 export const replaceTagsPath = (html: string, dir) => {
+  console.log(dir);
   const $ = cheerio.load(html);
   const links = $('link');
-  links.attr('href', (i, value) => path.normalize(generateResName(value)));
+  links.attr('href', (i, value) => value && path.normalize(generateResName2(value)));
   const scripts = $('script');
-  scripts.attr('src', (i, value) => path.normalize(generateResName(value)));
+  scripts.attr('src', (i, value) => value && path.normalize(generateResName2(value)));
   const imgs = $('img');
-  imgs.attr('src', (i, value) => path.normalize(generateResName(value)));
+  imgs.attr('src', (i, value) => value && path.normalize(generateResName2(value)));
   return $.html();
 };
 

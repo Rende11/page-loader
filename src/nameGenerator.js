@@ -2,27 +2,22 @@
 import pathNode from 'path';
 import { URL } from 'url';
 
-/* export const generateFileName = (url: string) => {
-  const { hostname, pathname } = new URL(url);
-  const replaced = `${hostname}${pathname}`.replace(/\W/gi, '-').replace(/-$/gi, '');
-  const withExtension = `${replaced}.html`;
-  return withExtension;
-};
-*/
 export const generatePath = (route: string) => {
   const { dir, base } = pathNode.parse(route);
-  return `${dir.replace(/\W/gi, '-')}${base}`;
+  return `${dir.replace(/\W/gi, '-').replace(/-$/gi, '').replace(/^-/gi, '')}${base}`;
 };
 
 
-export const generateName = (base, extension) => {
-  const replaced = `${base}`.replace(/\W/gi, '-').replace(/-$/gi, '').replace(/^-/gi, '');
+export const generateName = (base: string, extension: string) => {
+  const replaced = replaceSlashes(base);
   const withExtension = `${replaced}${extension}`;
   return withExtension;
 };
 
+const replaceSlashes = (str: string) => srt.replace(/W/gi, '-').replace(/-$/gi, '').replace(/^-/gi, '');
 
-export const generateFileName = (url: string) => {
+
+export const generateHtmlName = (url: string) => {
   const { hostname, pathname } = new URL(url);
   return generateName(`${hostname}${pathname}`, '.html');
 };
@@ -40,3 +35,9 @@ export const generateResName = (url: string) => {
   const fullName = `${dir}/${name}`;
   return generateName(fullName, ext);
 };
+
+export const generateResName2 = (route: string) => {
+  const { dir, base, ext, name } = pathNode.parse(route);
+  const d = generatePath(dir);
+  return `${d}-${base}`;
+}
