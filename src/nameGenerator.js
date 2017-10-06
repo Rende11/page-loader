@@ -10,7 +10,7 @@ import { URL } from 'url';
 };
 */
 export const generatePath = (route: string) => {
-  const { dir, base } = path.parse(route);
+  const { dir, base } = pathNode.parse(route);
   return `${dir.replace(/\W/gi, '-')}${base}`;
 };
 

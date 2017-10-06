@@ -4,24 +4,8 @@ import axios from 'axios';
 import { URL } from 'url';
 import mz from 'mz/fs';
 import path from 'path';
-import { getLinks } from './resourseLoader';
+import { getLinks,  replaceTagsPath } from './resourseLoader';
 import { generateName, generateFileName, generateDirName, generateResName } from './nameGenerator';
-
-export const loader5 = (url: string, route: string = './') => {
-  const filePath = path.resolve(`${route}/${generateName(url, '')}`);
-  return axios.get(url)
-    .then(response => response.data)
-    .then(data => mz.writeFile(filePath, data, 'utf8'));
-};
-
-/*
-export const fileLoader = (url: string, route: string = './') => {
-  const filePath = path.resolve(`${route}/${generateFileName(url)}`);
-  return axios.get(url)
-    .then(response => response.data)
-    .then(data => mz.writeFile(filePath, data, 'utf8'));
-};
-*/
 
 const loadHtml = (url: string, route: string = './') => {
   const filePath = path.resolve(`${route}/${generateFileName(url)}`)
@@ -52,25 +36,7 @@ export const loader = (url: string, route: string = './') => {
       const { host } = new URL(url);
       const links = getLinks(content, host);
       return Promise.all(links.map(link => loadRes(link, dirName)));
-    });
+    }).then(() => mz.readFile(filePath))
+    .then(content => replaceTagsPath(content, dirName))
+    .then(content => mz.writeFile(filePath, content, 'utf8'));
 };
-
-
-export const loader3 = (url: string, route: string = './') => {
-  const { host } = new URL(url);
-  return axios.get(url)
-    .then(response => response.data)
-    .then(data => {
-      const links = getLinks(data, host);
-      return Promise.all(links.map(link => loader2(link, route)));
-    });
-};
-
-const loader4 = (url: string, route: string = './') => {
-
-  loadHtml(url)
-    .then(mz => mz.mkdir('./kek'))
-    .then(
-      () => loadRes(url, './kek'));
-
-}
