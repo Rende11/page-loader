@@ -5,18 +5,6 @@ import cheerio from 'cheerio';
 import path from 'path';
 import { convert } from './nameGenerator';
 
-export const replaceTagsPath = (html: string, dir: string) => {
-  const $ = cheerio.load(html);
-  const links = $('link');
-  links.attr('href', (i, value) => (value ? path.join(dir, convert(value)) : null));
-  const scripts = $('script');
-  scripts.attr('src', (i, value) => (value ? path.join(dir, convert(value)) : null));
-  const imgs = $('img');
-  imgs.attr('src', (i, value) => (value ? path.join(dir, convert(value)) : null));
-  return $.html();
-};
-
-
 const tags = ['link', 'script', 'img'];
 
 const mapedLinks = {
@@ -24,6 +12,18 @@ const mapedLinks = {
   img: 'src',
   script: 'src',
 };
+
+export const replaceTagsPath = (html: string, dir: string) => {
+  const $ = cheerio.load(html);
+  tags.forEach(tag => {
+    const links = $(tag);
+    const option = mapedLinks[tag];
+    links.attr(option, (i, value) => (value ? path.join(dir, convert(value)) : null));
+  });
+  return $.html();
+};
+
+
 
 export const getResoursesHrefs = (html: string) => {
   const $ = cheerio.load(html);
