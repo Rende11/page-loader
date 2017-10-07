@@ -23,8 +23,8 @@ export const generateHtmlName = (url: string) => {
 
 
 export const generateDirName = (url: string) => {
-  const { hostname, pathname } = new URL(url);
-  return generateName(`${hostname}${pathname}`, '_files');
+    const { hostname, pathname } = new URL(url);
+    return generateName(`${hostname}${pathname}`, '_files');
 };
 
 

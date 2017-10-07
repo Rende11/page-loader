@@ -15,10 +15,10 @@ export const loadHtml = (url: string, route: string = './') => {
   const filePath = path.resolve(`${route}/${generateHtmlName(url)}`);
   return axios.get(url)
     .then(response => response.data)
-    .then((data) => {
+    .then(data => {
       logger('Saving HTML file to %s', filePath);
       return mz.writeFile(filePath, data, 'utf8');
-    });
+    }).catch(error => console.log("OLOLOLO"));
 };
 
 
@@ -30,7 +30,7 @@ const loadRes = (url: string, route: string = './') => {
     url,
     responseType: 'stream',
   };
-  return axios(options).then((content) => {
+  return axios(options).then(content => {
     logger('Saving resourse %s', name);
     return content.data.pipe(mz.createWriteStream(full));
   });
@@ -49,7 +49,7 @@ export const loader = (url: string, route: string = './') => {
       return Promise.all(links.map(link => loadRes(link, dirName)));
     })
     .then(() => mz.readFile(filePath))
-    .then((content) => {
+    .then(content => {
       logger('Replacing originals resourses path');
       return replaceTagsPath(content, generateDirName(url));
     })
