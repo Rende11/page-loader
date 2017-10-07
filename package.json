@@ -30,7 +30,10 @@
     "axios": "*",
     "commander": "*",
     "mz": "*",
-    "cheerio": "*"
+    "cheerio": "*",
+    "supports-color": "*",
+    "chalk": "*",
+    "debug": "*"
  },
   "devDependencies": {
     "babel-cli": "*",
