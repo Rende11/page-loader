@@ -4,6 +4,7 @@ import _ from 'lodash';
 import cheerio from 'cheerio';
 import path from 'path';
 import { convert } from './nameGenerator';
+import url from 'url';
 
 const tags = ['link', 'script', 'img'];
 
@@ -32,8 +33,17 @@ export const getResoursesHrefs = (html: string) => {
 };
 
 export const fullPathedLinks = (links: Array<string>, hostname: string) =>
-  links.map(link => (link.startsWith('http') ? link : `https://${path.join(hostname, link)}`));
-
+  links.map(link => {
+    if (link.startsWith('http')) {
+      return link;
+    }
+    const data = {
+      protocol: 'https',
+      hostname,
+      pathname: link
+    };
+    return url.format(data);
+  });
 export const getLinks = (html: string, host: string) => {
   const refs = getResoursesHrefs(html);
   const links = fullPathedLinks(refs, host);
