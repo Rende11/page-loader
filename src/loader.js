@@ -4,10 +4,14 @@ import axios from 'axios';
 import { URL } from 'url';
 import mz from 'mz/fs';
 import path from 'path';
+import debug from 'debug';
 import { getLinks, replaceTagsPath } from './resourseLoader';
 import { generateHtmlName, generateDirName, generateResName } from './nameGenerator';
 
+const logger = debug('page-loader');
+
 export const loadHtml = (url: string, route: string = './') => {
+  logger('Start loading %s', url);
   const filePath = path.resolve(`${route}/${generateHtmlName(url)}`);
   return axios.get(url)
     .then(response => response.data)
