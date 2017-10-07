@@ -39,8 +39,8 @@ export const generateResName = (url: string) => {
 export const convertLink = (link: string) => {
   const { dir, base } = pathNode.parse(link);
   const replaced = replaceSlashes(dir);
-
-  return `${replaced}-${base}`.replace(/^-/, '');
+  const result = `${replaced}-${base}`.replace(/^-/, '');
+  return result;
 };
 
 export const convertUrl = (url: string) => convertLink(new URL(url).pathname);

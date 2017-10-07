@@ -8,19 +8,18 @@ import debug from 'debug';
 import { getLinks, replaceTagsPath } from './resourseLoader';
 import { generateHtmlName, generateDirName, generateResName } from './nameGenerator';
 
-const logger = debug('page-loader');
+const log = debug('page-loader');
 
 export const loadHtml = (url: string, route: string = './') => {
-  logger('Start loading %s', url);
-  const filePath = path.resolve(`${route}/${generateHtmlName(url)}`);
+  log('Start loading %s', url);
+  const filePath = path.join(route, generateHtmlName(url));
   return axios.get(url)
     .then(response => response.data)
     .then((data) => {
-      logger('Saving HTML file to %s', filePath);
+      log('Saving HTML file to %s', filePath);
       return mz.writeFile(filePath, data, 'utf8');
     });
 };
-
 
 const loadRes = (url: string, route: string = './') => {
   const name = generateResName(url);
@@ -31,28 +30,35 @@ const loadRes = (url: string, route: string = './') => {
     responseType: 'stream',
   };
   return axios(options).then((content) => {
-    logger('Saving resourse %s', name);
+    log('Saving resourse %s', name);
     return content.data.pipe(mz.createWriteStream(full));
   });
 };
-export const loader = (url: string, route: string = './') => {
+
+const replacer = (filePath, content, url) => {
+  log('Replacing original links');
+  return mz.writeFile(filePath, replaceTagsPath(content, generateDirName(url)));
+};
+
+const loader = (url: string, route: string = './') => {
   const dirName = path.join(route, generateDirName(url));
-  logger('Resourses directory %s', dirName);
-  const filePath = path.resolve(`${route}/${generateHtmlName(url)}`);
+  log('Resourses directory %s', dirName);
+  const filePath = path.join(route, generateHtmlName(url));
+  log('File path - %s', filePath);
   return loadHtml(url, route)
     .then(() => mz.mkdir(dirName))
     .then(() => mz.readFile(filePath))
     .then((content) => {
       const { host } = new URL(url);
       const links = getLinks(content, host);
-      logger('Fouded resourses - %s', links.length);
-      return Promise.all(links.map(link => loadRes(link, dirName)));
+      log('Founded resourses - %s', links.length);
+      return Promise.all([...links.map(link => loadRes(link, dirName)),
+        replacer(filePath, content, url)]);
     })
-    .then(() => mz.readFile(filePath))
-    .then((content) => {
-      logger('Replacing originals resourses path');
-      return replaceTagsPath(content, generateDirName(url));
-    })
-    .then(content => mz.writeFile(filePath, content, 'utf8'));
+    .then(() => {
+      log('Saved on %s', filePath);
+      return filePath;
+    });
 };
 
+export default loader;
