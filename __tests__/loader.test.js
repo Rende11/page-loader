@@ -4,7 +4,7 @@ import os from 'os';
 import fs from 'mz/fs';
 import path from 'path';
 import nock from 'nock';
-
+import axios from '../src/lib/axios';
 import loader from '../src/loader';
 import { generateHtmlName } from '../src/nameGenerator';
 
@@ -12,6 +12,11 @@ import { generateHtmlName } from '../src/nameGenerator';
 nock.disableNetConnect();
 
 describe('Save file', () => {
+  test('Test request', () => {
+    const host = 'https://test.com';
+    nock(host).get('/').reply(200, 'OK');
+    return expect(axios.get(host).then(response => response.data)).resolves.toBe('OK');
+  });
   test('Load html', () => {
     expect.assertions(1);
     const host = 'https://simple.com';
