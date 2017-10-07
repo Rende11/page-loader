@@ -15,7 +15,10 @@ export const loadHtml = (url: string, route: string = './') => {
   const filePath = path.resolve(`${route}/${generateHtmlName(url)}`);
   return axios.get(url)
     .then(response => response.data)
-    .then(data => mz.writeFile(filePath, data, 'utf8'));
+    .then((data) => {
+      logger('Saving HTML file to %s', filePath);
+      return mz.writeFile(filePath, data, 'utf8');
+    });
 };
 
 
@@ -27,10 +30,14 @@ const loadRes = (url: string, route: string = './') => {
     url,
     responseType: 'stream',
   };
-  return axios(options).then(content => content.data.pipe(mz.createWriteStream(full)));
+  return axios(options).then((content) => {
+    logger('Saving resourse %s', name);
+    return content.data.pipe(mz.createWriteStream(full));
+  });
 };
 export const loader = (url: string, route: string = './') => {
   const dirName = path.join(route, generateDirName(url));
+  logger('Resourses directory %s', dirName);
   const filePath = path.resolve(`${route}/${generateHtmlName(url)}`);
   return loadHtml(url, route)
     .then(() => mz.mkdir(dirName))
@@ -38,10 +45,14 @@ export const loader = (url: string, route: string = './') => {
     .then((content) => {
       const { host } = new URL(url);
       const links = getLinks(content, host);
+      logger('Fouded resourses - %s', links.length);
       return Promise.all(links.map(link => loadRes(link, dirName)));
     })
     .then(() => mz.readFile(filePath))
-    .then(content => replaceTagsPath(content, generateDirName(url)))
+    .then((content) => {
+      logger('Replacing originals resourses path');
+      return replaceTagsPath(content, generateDirName(url));
+    })
     .then(content => mz.writeFile(filePath, content, 'utf8'));
 };
 
