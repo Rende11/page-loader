@@ -7,14 +7,13 @@ export const generatePath = (route: string) => {
   return `${dir.replace(/\W/gi, '-').replace(/-$/gi, '').replace(/^-/gi, '')}${base}`;
 };
 
+const replaceSlashes = (str: string) => str.replace(/\W/gi, '-').replace(/-$/gi, '').replace(/^-/gi, '');
 
 export const generateName = (base: string, extension: string) => {
   const replaced = replaceSlashes(base);
   const withExtension = `${replaced}${extension}`;
   return withExtension;
 };
-
-const replaceSlashes = (str: string) => str.replace(/\W/gi, '-').replace(/-$/gi, '').replace(/^-/gi, '');
 
 
 export const generateHtmlName = (url: string) => {
@@ -31,19 +30,25 @@ export const generateDirName = (url: string) => {
 
 export const generateResName = (url: string) => {
   const { pathname } = new URL(url);
-  const { dir, base, ext, name } = pathNode.parse(pathname);
+  const { dir, ext, name } = pathNode.parse(pathname);
   const fullName = `${dir}/${name}`;
   return generateName(fullName, ext);
 };
 
-export const generateResName2 = (route: string) => {
-  const { dir, base, ext, name } = pathNode.parse(route);
-  const d = generatePath(dir);
-  return `${d}-${base}`;
-}
 
-export const convertLink = (link) => {
+export const convertLink = (link: string) => {
   const { dir, base } = pathNode.parse(link);
   const replaced = replaceSlashes(dir);
-  return `${replaced}-${base}`;
-}
+
+  return `${replaced}-${base}`.replace(/^-/, '');
+};
+
+export const convertUrl = (url: string) => convertLink(new URL(url).pathname);
+
+export const convert = (str: string) => {
+  if (str.startsWith('http')) {
+    return convertUrl(str);
+  }
+  return convertLink(str);
+};
+

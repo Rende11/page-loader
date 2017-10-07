@@ -8,7 +8,7 @@ import axios from 'axios';
 import httpAdapter from 'axios/lib/adapters/http';
 
 
-import loader from '../src';
+import { loadHtml } from '../src/loader';
 import { generateHtmlName } from '../src/nameGenerator';
 
 
@@ -26,8 +26,7 @@ describe('Save file', () => {
     nock(host).get('/').reply(status, body);
     const route = `${tempDir}/${fileName}`;
 
-    return expect(loader(host, tempDir).then(() => fs.readFile(route, 'utf8'))).resolves.toBe(body);
+    return expect(loadHtml(host, tempDir).then(() => fs.readFile(route, 'utf8'))).resolves.toBe(body);
   });
 });
-
 

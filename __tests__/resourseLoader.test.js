@@ -1,11 +1,12 @@
 // @flow
 
-import { replaceTagsPath, getResoursesHrefs, fullPathedLinks } from '../src/resourseLoader';
-import { generateHtmlName } from '../src/nameGenerator';
 import fs from 'mz/fs';
+import { replaceTagsPath } from '../src/resourseLoader';
 
-describe('Test files name generator', () => {
-  test('empty', () => {
-    expect('test').toBe('test');
+describe('Replace file references', () => {
+  test('Base test', () => {
+    const body = fs.readFileSync('./__tests__/__fixtures__/simple.html');
+    const replacedBody = fs.readFileSync('./__tests__/__fixtures__/expected.html', 'utf8');
+    expect(replaceTagsPath(body, 'simple-com_files')).toBe(replacedBody);
   });
 });
