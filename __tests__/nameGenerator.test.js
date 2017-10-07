@@ -13,15 +13,15 @@ describe('Test files name generator', () => {
       .toBe('google-com.html');
   });
 
-  it('Test replace resourse', () => {
     const link = '/assets/icons/default/favicon-8fa102c058afb01de5016a155d7db433283dc7e08ddc3c4d1aef527c1b8502b6.ico';
     const localLink = 'assets-icons-default-favicon-8fa102c058afb01de5016a155d7db433283dc7e08ddc3c4d1aef527c1b8502b6.ico';
+  it('Test replace resourse', () => {
     expect(convert(link)).toBe(localLink);
   });
 
-  it('Test replace cdn resourses', () => {
     const remoteLink = 'https://cdn2.hexlet.io/attachments/d716c7eab3879273ec10faf38b5266db3cea2f9a/store/917bf394ec7db64af746bfa598d796b592bf3fd91d41576d8f34ec3ab6e7/image.png';
     const localRemoteLink = 'attachments-d716c7eab3879273ec10faf38b5266db3cea2f9a-store-917bf394ec7db64af746bfa598d796b592bf3fd91d41576d8f34ec3ab6e7-image.png';
+  it('Test replace cdn resourses', () => {
     expect(convert(remoteLink)).toBe(localRemoteLink);
   });
 });
