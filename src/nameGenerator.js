@@ -1,28 +1,22 @@
 // @flow
-import path from 'path';
+import pathNode from 'path';
 import { URL } from 'url';
 
-/* export const generateFileName = (url: string) => {
-  const { hostname, pathname } = new URL(url);
-  const replaced = `${hostname}${pathname}`.replace(/\W/gi, '-').replace(/-$/gi, '');
-  const withExtension = `${replaced}.html`;
-  return withExtension;
-};
-*/
 export const generatePath = (route: string) => {
-  const { dir, base } = path.parse(route);
-  return `${dir.replace(/\W/gi, '-')}${base}`;
+  const { dir, base } = pathNode.parse(route);
+  return `${dir.replace(/\W/gi, '-').replace(/-$/gi, '').replace(/^-/gi, '')}${base}`;
 };
 
+const replaceSlashes = (str: string) => str.replace(/\W/gi, '-').replace(/-$/gi, '').replace(/^-/gi, '');
 
-const generateName = (base, extension) => {
-  const replaced = `${base}`.replace(/\W/gi, '-').replace(/-$/gi, '');
+export const generateName = (base: string, extension: string) => {
+  const replaced = replaceSlashes(base);
   const withExtension = `${replaced}${extension}`;
   return withExtension;
 };
 
 
-export const generateFileName = (url: string) => {
+export const generateHtmlName = (url: string) => {
   const { hostname, pathname } = new URL(url);
   return generateName(`${hostname}${pathname}`, '.html');
 };
@@ -30,5 +24,31 @@ export const generateFileName = (url: string) => {
 
 export const generateDirName = (url: string) => {
   const { hostname, pathname } = new URL(url);
-  return generateName(`${hostname}${pathname}`, '.html');
+  return generateName(`${hostname}${pathname}`, '_files');
 };
+
+
+export const generateResName = (url: string) => {
+  const { pathname } = new URL(url);
+  const { dir, ext, name } = pathNode.parse(pathname);
+  const fullName = `${dir}/${name}`;
+  return generateName(fullName, ext);
+};
+
+
+export const convertLink = (link: string) => {
+  const { dir, base } = pathNode.parse(link);
+  const replaced = replaceSlashes(dir);
+
+  return `${replaced}-${base}`.replace(/^-/, '');
+};
+
+export const convertUrl = (url: string) => convertLink(new URL(url).pathname);
+
+export const convert = (str: string) => {
+  if (str.startsWith('http')) {
+    return convertUrl(str);
+  }
+  return convertLink(str);
+};
+

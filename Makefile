@@ -18,7 +18,10 @@ check-types:
 	npm run flow
 
 lint:
-	npm run eslint .
+	npm run eslint src __tests__
+
+lint-fix:
+	npm run -- eslint src __tests__ --fix
 
 publish:
 	npm publish
