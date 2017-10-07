@@ -38,7 +38,7 @@ const loadRes = (url: string, route: string = './') => {
 export const loader = (url: string, route: string = './') => {
   const dirName = path.join(route, generateDirName(url));
   logger('Resourses directory %s', dirName);
-  const filePath = path.resolve(`${route}/${generateHtmlName(url)}`);
+  const filePath = path.join(route, generateHtmlName(url));
   return loadHtml(url, route)
     .then(() => mz.mkdir(dirName))
     .then(() => mz.readFile(filePath))
