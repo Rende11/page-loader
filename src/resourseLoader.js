@@ -3,9 +3,8 @@
 import _ from 'lodash';
 import cheerio from 'cheerio';
 import path from 'path';
-import { convert } from './nameGenerator';
 import url from 'url';
-import debug from 'debug';
+import { convert } from './nameGenerator';
 
 const tags = ['link', 'script', 'img'];
 
@@ -17,7 +16,7 @@ const mapedLinks = {
 
 export const replaceTagsPath = (html: string, dir: string) => {
   const $ = cheerio.load(html);
-  tags.forEach(tag => {
+  tags.forEach((tag) => {
     const links = $(tag);
     const option = mapedLinks[tag];
     links.attr(option, (i, value) => (value ? path.join(dir, convert(value)) : null));
@@ -32,14 +31,14 @@ export const getResoursesHrefs = (html: string) => {
 };
 
 export const fullPathedLinks = (links: Array<string>, hostname: string) =>
-  links.map(link => {
+  links.map((link) => {
     if (link.startsWith('http')) {
       return link;
     }
     const data = {
       protocol: 'https',
       hostname,
-      pathname: link
+      pathname: link,
     };
     return url.format(data);
   });

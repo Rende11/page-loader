@@ -4,7 +4,6 @@ import os from 'os';
 import fs from 'mz/fs';
 import path from 'path';
 import nock from 'nock';
-import axios from '../src/lib/axios';
 
 import loader from '../src/loader';
 import { generateHtmlName } from '../src/nameGenerator';
@@ -28,18 +27,18 @@ describe('Save file', () => {
     const remoteImgPath = './__fixtures__/assets/AWp3Tv.png';
     nock(host)
       .get('/')
-        .reply(status, body)
+      .reply(status, body)
       .get('/assets/ie.css')
-        .replyWithFile(status, path.join(__dirname, cssPath))
+      .replyWithFile(status, path.join(__dirname, cssPath))
       .get('/assets/script.js')
-        .replyWithFile(status, path.join(__dirname, scriptPath))
+      .replyWithFile(status, path.join(__dirname, scriptPath))
       .get('/assets/picture.png')
-        .replyWithFile(status, path.join(__dirname, imgPath));
+      .replyWithFile(status, path.join(__dirname, imgPath));
     nock('https://goo.gl')
       .get('/AWp3Tv')
       .replyWithFile(status, path.join(__dirname, remoteImgPath));
 
-    return expect(loader(host, tempDir).then((filePath) => fs.readFile(filePath, 'utf8'))).resolves.toBe(expectedBody);
+    return expect(loader(host, tempDir).then(filePath => fs.readFile(filePath, 'utf8'))).resolves.toBe(expectedBody);
   });
 });
 

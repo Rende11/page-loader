@@ -5,4 +5,3 @@ import axios from 'axios';
 axios.defaults.adapter = httpAdapter;
 export default axios;
 
-

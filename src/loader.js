@@ -34,6 +34,12 @@ const loadRes = (url: string, route: string = './') => {
     return content.data.pipe(mz.createWriteStream(full));
   });
 };
+
+const replacer = (filePath, content, url) => {
+  log('Replacing original links');
+  return mz.writeFile(filePath, replaceTagsPath(content, generateDirName(url)));
+};
+
 const loader = (url: string, route: string = './') => {
   const dirName = path.join(route, generateDirName(url));
   log('Resourses directory %s', dirName);
@@ -46,16 +52,13 @@ const loader = (url: string, route: string = './') => {
       const { host } = new URL(url);
       const links = getLinks(content, host);
       log('Founded resourses - %s', links.length);
-      return Promise.all([...links.map(link => loadRes(link, dirName)), replacer(filePath, content, url)])
-    }).then(() => {
+      return Promise.all([...links.map(link => loadRes(link, dirName)),
+        replacer(filePath, content, url)]);
+    })
+    .then(() => {
       log('Saved on %s', filePath);
       return filePath;
     });
-
 };
 
-const replacer = (filePath, content, url) => {
-  log('Replacing original links');
-  return mz.writeFile(filePath, replaceTagsPath(content, generateDirName(url)));
-}
 export default loader;
