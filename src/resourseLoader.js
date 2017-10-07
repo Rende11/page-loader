@@ -5,6 +5,7 @@ import cheerio from 'cheerio';
 import path from 'path';
 import { convert } from './nameGenerator';
 import url from 'url';
+import debug from 'debug';
 
 const tags = ['link', 'script', 'img'];
 
@@ -23,8 +24,6 @@ export const replaceTagsPath = (html: string, dir: string) => {
   });
   return $.html();
 };
-
-
 
 export const getResoursesHrefs = (html: string) => {
   const $ = cheerio.load(html);
