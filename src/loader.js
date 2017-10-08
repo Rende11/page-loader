@@ -18,7 +18,7 @@ export const loadHtml = (url: string, route: string = './') => {
     .then((data) => {
       log('Saving HTML file to %s', filePath);
       return mz.writeFile(filePath, data, 'utf8');
-    });
+    }).catch(error => console.log("OLOLOLO"));
 };
 
 const loadRes = (url: string, route: string = './') => {
