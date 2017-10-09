@@ -44,10 +44,15 @@ const loadRes = (url: string, route: string = './') => {
       return content.data.pipe(mz.createWriteStream(full));
     })
     .catch((error) => {
-      const errorMessage = `${errorsList[error.code]} - ${url}`;
-      log(errorMessage);
+      if (error.code) {
+        const errorWithCode = `${errorsList[error.code]} - ${url}`;
+        console.error(errorWithCode);
+        return Promise.reject(errorWithCode);
+      }
+      log(error.message);
+      const errorMessage = `ERROR: ${error.message} - ${url}`;
       console.error(errorMessage);
-      return errorMessage;
+      return Promise.reject(errorMessage);
     });
 };
 
@@ -80,8 +85,11 @@ const loader = (url: string, route: string = './') => {
         const responseError = `ERROR: ${error.message}`;
         return Promise.reject(responseError);
       }
-      const errorMessage = errorsList[error.code] ? errorsList[error.code] : 'Unhadled error, please try again';
-      return Promise.reject(errorMessage);
+      if (error.code) {
+        return Promise.reject(errorsList[error.code]);
+      }
+      console.error(error);
+      return Promise.reject(error);
     });
 };
 
