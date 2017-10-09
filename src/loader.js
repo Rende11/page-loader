@@ -5,7 +5,6 @@ import { URL } from 'url';
 import mz from 'mz/fs';
 import path from 'path';
 import debug from 'debug';
-import execa from 'execa';
 import Listr from 'listr';
 import { getLinks, replaceTagsPath } from './resourseLoader';
 import { generateHtmlName, generateDirName, generateResName } from './nameGenerator';
@@ -44,15 +43,10 @@ const loadRes = (url: string, route: string = './') => {
       task: () => axios(options).then((content) => {
         log('Saving resourse %s', name);
         return content.data.pipe(mz.createWriteStream(full));
-      })
-    }
+      }),
+    },
   ]);
   tasks.run().catch(err => (err));
-  /*  return axios(options)
-    .then((content) => {
-      log('Saving resourse %s', name);
-      return content.data.pipe(mz.createWriteStream(full));
-    })*/
 };
 
 const replacer = (filePath, content, url) => {
