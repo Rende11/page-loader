@@ -49,10 +49,16 @@ describe('connect errors', () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'xy-'));
     fs.mkdir(path.join(tempDir, generateDirName(host)));
     nock(host).get('/').reply(200, 'hello world');
-    return expect(loader(host, tempDir).then(() =>loader(host, tempDir))).rejects
+    return expect(loader(host, tempDir)).rejects
       .toMatch("ERROR: File already exists");
   });
   it('Permission denied', () => {
-
-  });
+    expect.assertions(1);
+    const host = 'https://example.com';
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'xy-'));
+    fs.chmodSync(tempDir, '000')
+    nock(host).get('/').reply(200, 'hello world');
+    return expect(loader(host, tempDir)).rejects
+      .toMatch("ERROR: Permission denied");
+});
 });

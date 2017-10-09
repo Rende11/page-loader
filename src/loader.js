@@ -35,7 +35,7 @@ const loadRes = (url: string, route: string = './') => {
       return content.data.pipe(mz.createWriteStream(full));
     })
     .catch(error => {
-      const errorMessage = `${error.message} - ${url}`;
+      const errorMessage = `${errorsList[error.code]} - ${url}`;
       log(errorMessage);
       console.error(errorMessage);
       return errorMessage;
@@ -78,7 +78,8 @@ const errorsList = {
   'ENOTFOUND': 'ERROR: Resourse not found',
   'ENOENT': "ERROR: Selected directory doesn't exists",
   'ENOTDIR': "ERROR: Selected file not a directory",
-  'EEXIST': "ERROR: File already exists"
+  'EEXIST': "ERROR: File already exists",
+  'EACCES': "ERROR: Permission denied"
 };
 
 
