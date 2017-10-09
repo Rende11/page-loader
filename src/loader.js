@@ -69,13 +69,15 @@ const loader = (url: string, route: string = './') => {
       if (error.response) {
         return Promise.reject(error.message);
       }
-      const errorMessage = errorsList[error.code];
+      const errorMessage = errorsList[error.code] ? errorsList[error.code] : console.log(error);
       return Promise.reject(errorMessage);
     });
 };
 
 const errorsList = {
-  'ENOTFOUND': `Resourse not found`
+  'ENOTFOUND': 'Resourse not found',
+  'ENOENT': "Selected directory doesn't exists",
+  'ENOTDIR': "Selected file not a directory"
 };
 
 
