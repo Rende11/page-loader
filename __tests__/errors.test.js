@@ -4,29 +4,27 @@ import os from 'os';
 import fs from 'mz/fs';
 import path from 'path';
 import nock from 'nock';
-import axios from 'axios';
-import httpAdapter from 'axios/lib/adapters/http';
+import axios from '../src/lib/axios';
 
 
-import { loadHtml } from '../src/loader';
+import  loader  from '../src/loader';
 import { generateHtmlName } from '../src/nameGenerator';
 
 
 nock.disableNetConnect();
-describe('Save file', () => {
-  test('Load html', () => {
+
+
+describe('connect errors', () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'x-'));
+
+  it('Wrong hostname', () => {
+
+  });
+
+  it('Not ok response status', () => {
     expect.assertions(1);
-    const host = 'https://hexlet.io';
-    axios.defaults.adapter = httpAdapter;
-    const fileName = generateHtmlName(host);
-    const status = 200;
-    const body = fs.readFileSync('./__tests__/__fixtures__/hexlet-io.html', 'utf8');
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'x-'));
-
-    nock(host).get('/').reply(status, body);
-    const route = `${tempDir}/${fileName}`;
-
-    return expect(loadHtml(host, tempDir).then(() => fs.readFile(route, 'utf8'))).resolves.toBe(body);
+    nock('https://test.com').get('/notexists').reply(404);
+    return expect(loader('https://test.com/notexists', tempDir)).rejects
+      .toMatch('Request failed with status code 404');
   });
 });
-

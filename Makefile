@@ -2,7 +2,7 @@ install:
 	npm install
 
 run:
-	npm run babel-node -- 'src/bin/index.js' --output test https://hexlet.io
+	npm run babel-node -- 'src/bin/index.js' --output test https://habrahabr.ru/sandbox/72340/
 
 install-flow-typed:
 	npm run flow-typed install
@@ -25,5 +25,10 @@ lint-fix:
 
 publish:
 	npm publish
+
+start:
+	rm -rf test
+	mkdir test
+	make run
 
 .PHONY: test
