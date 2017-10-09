@@ -10,6 +10,15 @@ import { generateHtmlName, generateDirName, generateResName } from './nameGenera
 
 const log = debug('page-loader');
 
+const errorsList = {
+  ENOTFOUND: 'ERROR: Resourse not found',
+  ENOENT: "ERROR: Selected directory doesn't exists",
+  ENOTDIR: 'ERROR: Selected file not a directory',
+  EEXIST: 'ERROR: File already exists',
+  EACCES: 'ERROR: Permission denied',
+};
+
+
 export const loadHtml = (url: string, route: string = './') => {
   log('Start loading %s', url);
   const filePath = path.join(route, generateHtmlName(url));
@@ -34,7 +43,7 @@ const loadRes = (url: string, route: string = './') => {
       log('Saving resourse %s', name);
       return content.data.pipe(mz.createWriteStream(full));
     })
-    .catch(error => {
+    .catch((error) => {
       const errorMessage = `${errorsList[error.code]} - ${url}`;
       log(errorMessage);
       console.error(errorMessage);
@@ -65,21 +74,15 @@ const loader = (url: string, route: string = './') => {
     .then(() => {
       log('Saved on %s', filePath);
       return filePath;
-    }).catch(error => {
+    })
+    .catch((error) => {
       if (error.response) {
-        return Promise.reject(`ERROR: ${error.message}`);
+        const responseError = `ERROR: ${error.message}`;
+        return Promise.reject(responseError);
       }
       const errorMessage = errorsList[error.code] ? errorsList[error.code] : 'Unhadled error, please try again';
       return Promise.reject(errorMessage);
     });
-};
-
-const errorsList = {
-  'ENOTFOUND': 'ERROR: Resourse not found',
-  'ENOENT': "ERROR: Selected directory doesn't exists",
-  'ENOTDIR': "ERROR: Selected file not a directory",
-  'EEXIST': "ERROR: File already exists",
-  'EACCES': "ERROR: Permission denied"
 };
 
 
