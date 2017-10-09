@@ -67,17 +67,18 @@ const loader = (url: string, route: string = './') => {
       return filePath;
     }).catch(error => {
       if (error.response) {
-        return Promise.reject(error.message);
+        return Promise.reject(`ERROR: ${error.message}`);
       }
-      const errorMessage = errorsList[error.code] ? errorsList[error.code] : console.log(error);
+      const errorMessage = errorsList[error.code] ? errorsList[error.code] : 'Unhadled error, please try again';
       return Promise.reject(errorMessage);
     });
 };
 
 const errorsList = {
-  'ENOTFOUND': 'Resourse not found',
-  'ENOENT': "Selected directory doesn't exists",
-  'ENOTDIR': "Selected file not a directory"
+  'ENOTFOUND': 'ERROR: Resourse not found',
+  'ENOENT': "ERROR: Selected directory doesn't exists",
+  'ENOTDIR': "ERROR: Selected file not a directory",
+  'EEXIST': "ERROR: File already exists"
 };
 
 
