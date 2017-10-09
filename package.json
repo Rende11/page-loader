@@ -27,6 +27,7 @@
   "dependencies": {
     "lodash": "*",
     "listr": "*",
+    "execa": "*",
     "axios": "*",
     "commander": "*",
     "mz": "*",

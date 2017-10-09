@@ -5,6 +5,8 @@ import { URL } from 'url';
 import mz from 'mz/fs';
 import path from 'path';
 import debug from 'debug';
+import execa from 'execa';
+import Listr from 'listr';
 import { getLinks, replaceTagsPath } from './resourseLoader';
 import { generateHtmlName, generateDirName, generateResName } from './nameGenerator';
 
@@ -17,8 +19,6 @@ const errorsList = {
   EEXIST: 'ERROR: File already exists',
   EACCES: 'ERROR: Permission denied',
 };
-
-
 export const loadHtml = (url: string, route: string = './') => {
   log('Start loading %s', url);
   const filePath = path.join(route, generateHtmlName(url));
@@ -38,22 +38,21 @@ const loadRes = (url: string, route: string = './') => {
     url,
     responseType: 'stream',
   };
-  return axios(options)
+  const tasks = new Listr([
+    {
+      title: `Load resourse ${url}`,
+      task: () => axios(options).then((content) => {
+        log('Saving resourse %s', name);
+        return content.data.pipe(mz.createWriteStream(full));
+      })
+    }
+  ]);
+  tasks.run().catch(err => (err));
+  /*  return axios(options)
     .then((content) => {
       log('Saving resourse %s', name);
       return content.data.pipe(mz.createWriteStream(full));
-    })
-    .catch((error) => {
-      if (error.code) {
-        const errorWithCode = `${errorsList[error.code]} - ${url}`;
-        console.error(errorWithCode);
-        return Promise.reject(errorWithCode);
-      }
-      log(error.message);
-      const errorMessage = `ERROR: ${error.message} - ${url}`;
-      console.error(errorMessage);
-      return Promise.reject(errorMessage);
-    });
+    })*/
 };
 
 const replacer = (filePath, content, url) => {
@@ -88,7 +87,6 @@ const loader = (url: string, route: string = './') => {
       if (error.code) {
         return Promise.reject(errorsList[error.code]);
       }
-      console.error(error);
       return Promise.reject(error);
     });
 };
