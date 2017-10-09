@@ -10,6 +10,15 @@ import { generateHtmlName, generateDirName, generateResName } from './nameGenera
 
 const log = debug('page-loader');
 
+const errorsList = {
+  ENOTFOUND: 'ERROR: Resourse not found',
+  ENOENT: "ERROR: Selected directory doesn't exists",
+  ENOTDIR: 'ERROR: Selected file not a directory',
+  EEXIST: 'ERROR: File already exists',
+  EACCES: 'ERROR: Permission denied',
+};
+
+
 export const loadHtml = (url: string, route: string = './') => {
   log('Start loading %s', url);
   const filePath = path.join(route, generateHtmlName(url));
@@ -18,7 +27,7 @@ export const loadHtml = (url: string, route: string = './') => {
     .then((data) => {
       log('Saving HTML file to %s', filePath);
       return mz.writeFile(filePath, data, 'utf8');
-    }).catch(error => console.log("OLOLOLO"));
+    });
 };
 
 const loadRes = (url: string, route: string = './') => {
@@ -29,10 +38,17 @@ const loadRes = (url: string, route: string = './') => {
     url,
     responseType: 'stream',
   };
-  return axios(options).then((content) => {
-    log('Saving resourse %s', name);
-    return content.data.pipe(mz.createWriteStream(full));
-  });
+  return axios(options)
+    .then((content) => {
+      log('Saving resourse %s', name);
+      return content.data.pipe(mz.createWriteStream(full));
+    })
+    .catch((error) => {
+      const errorMessage = `${errorsList[error.code]} - ${url}`;
+      log(errorMessage);
+      console.error(errorMessage);
+      return errorMessage;
+    });
 };
 
 const replacer = (filePath, content, url) => {
@@ -58,7 +74,16 @@ const loader = (url: string, route: string = './') => {
     .then(() => {
       log('Saved on %s', filePath);
       return filePath;
+    })
+    .catch((error) => {
+      if (error.response) {
+        const responseError = `ERROR: ${error.message}`;
+        return Promise.reject(responseError);
+      }
+      const errorMessage = errorsList[error.code] ? errorsList[error.code] : 'Unhadled error, please try again';
+      return Promise.reject(errorMessage);
     });
 };
+
 
 export default loader;
