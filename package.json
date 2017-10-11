@@ -1,6 +1,6 @@
 {
   "name": "async-page-loader",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "async-page-loader",
   "bin": {
     "async-page-loader": "dist/bin/index.js"

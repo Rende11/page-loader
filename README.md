@@ -24,4 +24,4 @@ async-page-loader --output [path to save] url
 
 #### Current workflow
 
-  [asciinema](https://asciinema.org/a/WPkYiO24uHFlcoRCHbzclNYBO)
+https://asciinema.org/a/nhftuB8qWOqyFIems6Iqg2Ac5

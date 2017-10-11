@@ -6,7 +6,7 @@ import loader from '../';
 
 
 cli
-  .version('0.0.5')
+  .version('0.1.0')
   .arguments('<url>')
   .description('Download data from url')
   .action(url =>
