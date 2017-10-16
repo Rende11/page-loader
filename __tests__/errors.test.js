@@ -4,8 +4,8 @@ import os from 'os';
 import fs from 'mz/fs';
 import path from 'path';
 import nock from 'nock';
-import axios from '../src/lib/axios';
 import fsExtra from 'fs-extra';
+import axios from '../src/lib/axios';
 import loader from '../src/loader';
 import { generateDirName } from '../src/nameGenerator';
 
@@ -31,9 +31,7 @@ describe('connect errors', () => {
   afterEach(() => {
     fsExtra.removeSync(tempDir);
   });
-  test('Test request', () => {
-    return expect(axios.get(host).then(response => response.data)).resolves.toBe('OK');
-  });
+  test('Test request', () => expect(axios.get(host).then(response => response.data)).resolves.toBe('OK'));
 
   it('Not ok response status', async () => {
     expect.assertions(1);

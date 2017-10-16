@@ -2,10 +2,6 @@
 import pathNode from 'path';
 import { URL } from 'url';
 
-/*export const generatePath = (route: string) => {
-  const { dir, base } = pathNode.parse(route);
-  return `${dir.replace(/\W/gi, '-').replace(/-$/gi, '').replace(/^-/gi, '')}${base}`;
-};*/
 
 const replaceSlashes = (str: string) => str.replace(/\W/gi, '-').replace(/-$/gi, '').replace(/^-/gi, '');
 

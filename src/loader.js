@@ -20,7 +20,7 @@ const errorsList = {
   EACCES: 'ERROR: Permission denied',
 };
 
-export const loadHtml = (url: string, route: string = './') => {
+export const loadHtml = (url: string) => {
   log('Start loading %s', url);
   return axios.get(url).then(response => response.data);
 };
@@ -58,7 +58,7 @@ const loader = async (url: string, route: string = './') => {
     const filePath = path.join(route, generateHtmlName(url));
     log('File path - %s', filePath);
     await mz.mkdir(dirName);
-    const html = await loadHtml(url, route);
+    const html = await loadHtml(url);
     const { host } = new URL(url);
     const links = getLinks(html, host);
     log('Founded resourses <- %s', links.length);
@@ -76,7 +76,7 @@ const loader = async (url: string, route: string = './') => {
     if (error.message) {
       return Promise.reject(chalk.red(error.message));
     }
-    return Promise.reject(chakl.red(error));
+    return Promise.reject(chalk.red(error));
   }
 };
 
