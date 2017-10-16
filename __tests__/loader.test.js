@@ -4,6 +4,7 @@ import os from 'os';
 import fs from 'mz/fs';
 import path from 'path';
 import nock from 'nock';
+import fsExtra from 'fs-extra';
 import axios from '../src/lib/axios';
 import loader from '../src/loader';
 import { generateHtmlName } from '../src/nameGenerator';
@@ -12,6 +13,10 @@ import { generateHtmlName } from '../src/nameGenerator';
 nock.disableNetConnect();
 
 describe('Save file', () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'z-'));
+  afterAll(() => {
+    fsExtra.removeSync(tempDir);
+  });
   test('Test request', () => {
     const host = 'https://test.com';
     nock(host).get('/').reply(200, 'OK');
@@ -25,7 +30,6 @@ describe('Save file', () => {
     const fixturesPath = './__tests__/__fixtures__/';
     const body = fs.readFileSync(path.join(fixturesPath, fileName), 'utf8');
     const expectedBody = fs.readFileSync(path.join(fixturesPath, 'expected.html'), 'utf8');
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'x-'));
     const cssPath = './__fixtures__/assets/ie.css';
     const scriptPath = './__fixtures__/assets/script.js';
     const imgPath = './__fixtures__/assets/picture.png';

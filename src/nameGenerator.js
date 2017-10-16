@@ -23,14 +23,8 @@ export const generateHtmlName = (url: string) => {
 
 
 export const generateDirName = (url: string) => {
-  try {
-    const { hostname, pathname } = new URL(url);
-    return generateName(`${hostname}${pathname}`, '_files');
-  } catch (e) {
-    console.error(e.message, 'URL format must be like https://hexlet.io/courses');
-    process.exit(1);
-    return '';
-  }
+  const { hostname, pathname } = new URL(url);
+  return generateName(`${hostname}${pathname}`, '_files');
 };
 
 

@@ -27,38 +27,38 @@ describe('connect errors', () => {
     return expect(axios.get(host).then(response => response.data)).resolves.toBe('OK');
   });
 
-  it('Not ok response status', () => {
+  it('Not ok response status', async () => {
     expect.assertions(1);
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'x-'));
-    return expect(loader('https://test.com/404', tempDir)).rejects
-      .toMatch('ERROR: Request failed with status code 404');
+    await expect(loader('https://test.com/404', tempDir)).rejects
+      .toBe('ERROR: Request failed with status code 404');
   });
 
-  it('Directory not exists', () => {
+  it('Directory not exists', async () => {
     expect.assertions(1);
-    return expect(loader(host, './notexists')).rejects
-      .toMatch("ERROR: Selected directory doesn't exists");
+    await expect(loader(host, './notexists')).rejects
+      .toBe("ERROR: Selected directory doesn't exists");
   });
-  it('Target directory is a file', () => {
+  it('Target directory is a file', async () => {
     expect.assertions(1);
     nock(host).get('/').reply(200, 'hello world');
-    return expect(loader(host, dirName)).rejects
-      .toMatch('ERROR: Selected file not a directory');
+    await expect(loader(host, dirName)).rejects
+      .toBe('ERROR: Selected file not a directory');
   });
-  it('File already exists', () => {
+  it('File already exists', async () => {
     expect.assertions(1);
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'xy-'));
     fs.mkdir(path.join(tempDir, generateDirName(host)));
     nock(host).get('/').reply(200, 'hello world');
-    return expect(loader(host, tempDir)).rejects
-      .toMatch('ERROR: File already exists');
+    await expect(loader(host, tempDir)).rejects
+      .toBe('ERROR: File already exists');
   });
-  it('Permission denied', () => {
+  it('Permission denied', async () => {
     expect.assertions(1);
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'xy-'));
     fs.chmodSync(tempDir, '000');
     nock(host).get('/').reply(200, 'hello world');
-    return expect(loader(host, tempDir)).rejects
-      .toMatch('ERROR: Permission denied');
+    await expect(loader(host, tempDir)).rejects
+      .toBe('ERROR: Permission denied');
   });
 });

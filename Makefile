@@ -2,7 +2,7 @@ install:
 	npm install
 
 run:
-	npm run babel-node -- 'src/bin/index.js' --output test/ https://habrahabr.ru/sandbox/72340/
+	npm run babel-node -- 'src/bin/index.js' --output test/ hexlet.io
 
 install-flow-typed:
 	npm run flow-typed install

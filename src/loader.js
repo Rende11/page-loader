@@ -22,9 +22,7 @@ const errorsList = {
 export const loadHtml = async (url: string, route: string = './') => {
   log('Start loading %s', url);
   const filePath = path.join(route, generateHtmlName(url));
-  const response = await axios.get(url)
-  log('Saving HTML file to %s', filePath);
-  return mz.writeFile(filePath, response.data, 'utf8');
+  return axios.get(url).then(response => response.data);
 };
 
 const loadRes = (url: string, route: string = './') => {
@@ -53,66 +51,33 @@ const replacer = (filePath, content, url) => {
   return mz.writeFile(filePath, replaceTagsPath(content, generateDirName(url)));
 };
 
-const loader2 = (url: string, route: string = './') => {
-  const dirName = path.join(route, generateDirName(url));
-  log('Resourses directory %s', dirName);
-  const filePath = path.join(route, generateHtmlName(url));
-  log('File path - %s', filePath);
-  return loadHtml(url, route)
-    .then(() => mz.mkdir(dirName))
-    .then(() => mz.readFile(filePath))
-    .then((content) => {
-      const { host } = new URL(url);
-      const links = getLinks(content, host);
-      log('Founded resourses - %s', links.length);
-      return Promise.all([...links.map(link => loadRes(link, dirName)),
-        replacer(filePath, content, url)]);
-    })
-    .then(() => {
-      log('Saved on %s', filePath);
-      return filePath;
-    })
-    .catch((error) => {
-      if (error.response) {
-        const responseError = `ERROR: ${error.message}`;
-        return Promise.reject(responseError);
-      }
-      if (error.code) {
-        return Promise.reject(errorsList[error.code]);
-     }
-      return Promise.reject(error);
-    });
-};
-
-
 const loader = async (url: string, route: string = './') => {
-  const dirName = path.join(route, generateDirName(url));
-  log('Resourses directory %s', dirName);
-  const filePath = path.join(route, generateHtmlName(url));
-  log('File path - %s', filePath);
-  const html = await loadHtml(url, route);
-  mz.mkdir(dirName)
-  const { host } = new URL(url);
-  const links = getLinks(html, host);
-  log('Founded resourses <- %s', links.length);
-  return Promise.all([...links.map(link => loadRes(link, dirName)),
-        replacer(filePath, content, url)])
-
-    .then(() => {
-      log('Saved on %s', filePath);
-      return filePath;
-    })
-    .catch((error) => {
-      if (error.response) {
-        const responseError = `ERROR: ${error.message}`;
-        return Promise.reject(responseError);
-      }
-      if (error.code) {
-        return Promise.reject(errorsList[error.code]);
-     }
-      return Promise.reject(error);
-    });
+  try {
+    const dirName = path.join(route, generateDirName(url));
+    log('Resourses directory %s', dirName);
+    const filePath = path.join(route, generateHtmlName(url));
+    log('File path - %s', filePath);
+    await mz.mkdir(dirName);
+    const html = await loadHtml(url, route);
+    const { host } = new URL(url);
+    const links = getLinks(html, host);
+    log('Founded resourses <- %s', links.length);
+    links.map(link => loadRes(link, dirName));
+    await replacer(filePath, html, url);
+    return filePath;
+  } catch (error) {
+    if (error.response) {
+      const responseError = `ERROR: ${error.message}`;
+      return Promise.reject(responseError);
+    }
+    if (error.code) {
+      return Promise.reject(errorsList[error.code]);
+    }
+    if (error.message) {
+      return Promise.reject(error.message);
+    }
+    return Promise.reject(error);
+  }
 };
-
 
 export default loader;
