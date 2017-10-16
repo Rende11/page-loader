@@ -42,6 +42,7 @@ export const fullPathedLinks = (links: Array<string>, hostname: string) =>
     };
     return url.format(data);
   });
+
 export const getLinks = (html: string, host: string) => {
   const refs = getResoursesHrefs(html);
   const links = fullPathedLinks(refs, host);

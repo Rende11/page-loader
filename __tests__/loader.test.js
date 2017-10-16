@@ -14,15 +14,19 @@ nock.disableNetConnect();
 
 describe('Save file', () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'z-'));
+
   afterAll(() => {
     fsExtra.removeSync(tempDir);
   });
-  test('Test request', () => {
-    const host = 'https://test.com';
-    nock(host).get('/').reply(200, 'OK');
-    return expect(axios.get(host).then(response => response.data)).resolves.toBe('OK');
+
+  const host = 'https://test.com';
+  nock(host).get('/').reply(200, 'OK');
+
+  test('Test request', async () => {
+    await expect(axios.get(host).then(response => response.data)).resolves.toBe('OK');
   });
-  test('Load html', () => {
+
+  test('Load html', async () => {
     expect.assertions(1);
     const host = 'https://simple.com';
     const fileName = generateHtmlName(host);
@@ -47,7 +51,7 @@ describe('Save file', () => {
       .get('/AWp3Tv')
       .replyWithFile(status, path.join(__dirname, remoteImgPath));
 
-    return expect(loader(host, tempDir).then(filePath => fs.readFile(filePath, 'utf8'))).resolves.toBe(expectedBody);
+    await expect(loader(host, tempDir).then(filePath => fs.readFile(filePath, 'utf8'))).resolves.toBe(expectedBody);
   });
 });
 

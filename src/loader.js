@@ -6,6 +6,7 @@ import mz from 'mz/fs';
 import path from 'path';
 import debug from 'debug';
 import Listr from 'listr';
+import chalk from 'chalk';
 import { getLinks, replaceTagsPath } from './resourseLoader';
 import { generateHtmlName, generateDirName, generateResName } from './nameGenerator';
 
@@ -19,9 +20,8 @@ const errorsList = {
   EACCES: 'ERROR: Permission denied',
 };
 
-export const loadHtml = async (url: string, route: string = './') => {
+export const loadHtml = (url: string, route: string = './') => {
   log('Start loading %s', url);
-  const filePath = path.join(route, generateHtmlName(url));
   return axios.get(url).then(response => response.data);
 };
 
@@ -74,9 +74,9 @@ const loader = async (url: string, route: string = './') => {
       return Promise.reject(errorsList[error.code]);
     }
     if (error.message) {
-      return Promise.reject(error.message);
+      return Promise.reject(chalk.red(error.message));
     }
-    return Promise.reject(error);
+    return Promise.reject(chakl.red(error));
   }
 };
 
